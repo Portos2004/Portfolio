@@ -32,19 +32,19 @@
         </div>
         
         <div class="project-gallery">
-            <img src="Orbit_Ops.png" alt="Screenshot 1">
-            <img src="Orbit_Ops1.png" alt="Screenshot 2">
-            <img src="Orbit_Ops2.png" alt="Screenshot 3">
+            <img src="Orbit_Ops.png" alt="Screenshot 1" class="gallery-image" onclick="openModal(this)">
+            <img src="Orbit_Ops1.png" alt="Screenshot 2" class="gallery-image" onclick="openModal(this)">
+            <img src="Orbit_Ops2.png" alt="Screenshot 3" class="gallery-image" onclick="openModal(this)">
         </div>
-        
-        <div class="project-overview">
-            <h2>Overview</h2>
-            <p>
-                Orbit Ops est un FPS développé sur Unity lors d'un projet scolaire au Gaming Campus. 
-                C'est un jeu solo dans lequel vous devez vous battre contre les envahisseurs à l'aide de votre arme afin de protéger la ville !
-            </p>
+
+        <!-- Modal Structure -->
+        <div id="imageModal" class="modal" onclick="clickOutside(event)">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <img class="modal-content" id="modalImg">
+            <a class="prev" onclick="changeImage(-1)">&#10094;</a>
+            <a class="next" onclick="changeImage(1)">&#10095;</a>
         </div>
-        
+
         <div class="project-features">
             <h2>Key Features</h2>
             <ul>
@@ -63,5 +63,49 @@
             <span class="tag">Solo</span>
         </div>
     </section>
+
+    <script>
+        let currentIndex = 0;
+        let images = [];
+        
+        function openModal(img) {
+            images = Array.from(document.querySelectorAll(".project-gallery img")); // Get all images in the gallery
+            currentIndex = images.indexOf(img); // Find the clicked image index
+        
+            let modal = document.getElementById("imageModal");
+            let modalImg = document.getElementById("modalImg");
+        
+            modal.style.display = "flex";
+            modalImg.src = img.src;
+        }
+        
+        function closeModal() {
+            document.getElementById("imageModal").style.display = "none";
+        }
+        
+        // Change Image using Arrows
+        function changeImage(direction) {
+            currentIndex += direction;
+        
+            // Loop back if out of bounds
+            if (currentIndex < 0) {
+                currentIndex = images.length - 1;
+            } else if (currentIndex >= images.length) {
+                currentIndex = 0;
+            }
+        
+            document.getElementById("modalImg").src = images[currentIndex].src;
+        }
+        
+        // Close modal when clicking outside the image
+        function clickOutside(event) {
+            let modal = document.getElementById("imageModal");
+            let modalImg = document.getElementById("modalImg");
+            
+            if (event.target === modal && event.target !== modalImg) {
+                closeModal();
+            }
+        }        
+    </script>
 </body>
 </html>
