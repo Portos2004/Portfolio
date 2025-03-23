@@ -38,7 +38,8 @@ body {
 
 .project-meta {
     display: flex;
-    justify-content: space-around;
+    justify-content: center; /* Ensures proper centering */
+    gap: 50px; /* Adds space between sections */
     margin: 20px 0;
 }
 
@@ -46,6 +47,8 @@ body {
     background: #e6e6fa; /* Lavender background */
     padding: 15px;
     border-radius: 8px;
+    min-width: 180px; /* Ensures equal width for all meta sections */
+    text-align: center;
 }
 
 .project-gallery {
