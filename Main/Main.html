@@ -37,8 +37,30 @@
      
     <section id="projects">
         <h2>Projets</h2>
+        <div class="dropdown">
+            <button id="filterDropdown" class="dropdown-button">Filter Projects</button>
+            <div id="dropdownMenu" class="dropdown-content">
+                <input type="text" id="tagSearch" placeholder="Search tags...">
+                <div id="tagList">
+                    <div class="tag-item">3D</div>
+                    <div class="tag-item">Blueprint</div>
+                    <div class="tag-item">C#</div>
+                    <div class="tag-item">C++</div>
+                    <div class="tag-item">Equipe</div>
+                    <div class="tag-item">FPS</div>
+                    <div class="tag-item">Solo</div>
+                    <div class="tag-item">Unity</div>
+                    <div class="tag-item">Unreal Engine</div>
+                    <!-- Add more tags as needed -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- Display selected tags -->
+        <div id="selectedTags"></div>        
+
         <div class="projects-container">
-            <a href="../OrbitOps/OrbitOps.html" class="project-card">
+            <a href="../OrbitOps/OrbitOps.html" class="project-card" data-tags="Unity C# 3D FPS Solo">
                 <img src="../OrbitOps/Orbit_Ops.png" alt="Orbit Ops">
                 <div class="project-info">
                     <h3>Orbit Ops</h3>
@@ -52,7 +74,7 @@
                     </div>
                 </div>
             </a>
-            <a href="../Ski/Ski.html" class="project-card">
+            <a href="../Ski/Ski.html" class="project-card" data-tags="Unreal Engine Blueprint 3D Equipe">
                 <img src="../Ski/SkiGame.png" alt="Ski game">
                 <div class="project-info">
                     <h3>Snowboard Game</h3>
@@ -72,5 +94,86 @@
         <p>Contact: florian.cardoso28@gmail.com</p>
         <p>Téléphone: 07 83 57 46 61</p>
     </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const dropdownButton = document.getElementById("filterDropdown");
+            const dropdownMenu = document.getElementById("dropdownMenu");
+            const searchInput = document.getElementById("tagSearch");
+            const tagItems = document.querySelectorAll(".tag-item");
+            const selectedTagsContainer = document.getElementById("selectedTags");
+            let selectedTags = [];
+        
+            // Toggle dropdown visibility
+            dropdownButton.addEventListener("click", function (event) {
+                dropdownMenu.classList.toggle("show");
+                event.stopPropagation(); // Prevents immediate closing when clicking the button
+            });
+        
+            // Close dropdown when clicking outside
+            document.addEventListener("click", function (event) {
+                if (!dropdownMenu.contains(event.target) && event.target !== dropdownButton) {
+                    dropdownMenu.classList.remove("show");
+                }
+            });
+        
+            // Prevent closing when interacting with the dropdown
+            dropdownMenu.addEventListener("click", function (event) {
+                event.stopPropagation();
+            });
+        
+            // Filter dropdown items based on search input
+            searchInput.addEventListener("input", function () {
+                const query = searchInput.value.toLowerCase();
+                tagItems.forEach(item => {
+                    const tagText = item.textContent.toLowerCase();
+                    item.style.display = tagText.includes(query) ? "block" : "none";
+                });
+            });
+        
+            // Handle tag selection
+            tagItems.forEach(item => {
+                item.addEventListener("click", function () {
+                    const tag = item.textContent;
+                    if (!selectedTags.includes(tag)) {
+                        selectedTags.push(tag);
+                        updateSelectedTags();
+                    }
+                    filterProjects();
+                });
+            });
+        
+            // Update selected tags display
+            function updateSelectedTags() {
+                selectedTagsContainer.innerHTML = "";
+                selectedTags.forEach(tag => {
+                    const tagElement = document.createElement("span");
+                    tagElement.classList.add("selected-tag");
+                    tagElement.textContent = tag;
+        
+                    // Remove tag when clicked
+                    tagElement.addEventListener("click", function () {
+                        selectedTags = selectedTags.filter(t => t !== tag);
+                        updateSelectedTags();
+                        filterProjects();
+                    });
+        
+                    selectedTagsContainer.appendChild(tagElement);
+                });
+            }
+        
+            // Filter projects based on selected tags
+            function filterProjects() {
+                document.querySelectorAll(".project-card").forEach(card => {
+                    const projectTags = Array.from(card.querySelectorAll(".project-tag"))
+                        .map(tag => tag.textContent);
+        
+                    // Show the project if it matches all selected tags
+                    const matches = selectedTags.every(tag => projectTags.includes(tag));
+                    card.style.display = matches || selectedTags.length === 0 ? "block" : "none";
+                });
+            }
+        });        
+    </script>
 </body>
 </html>
